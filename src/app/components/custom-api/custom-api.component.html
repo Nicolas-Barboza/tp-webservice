@@ -1,0 +1,23 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h2 class="mb-4">🔲 Generador de Código QR</h2>
+  
+        <div class="input-group mb-3">
+          <input
+            [(ngModel)]="texto"
+            type="text"
+            class="form-control"
+            placeholder="Escribe algo para generar el QR..."
+          />
+          <button class="btn btn-primary" (click)="generarQR()">Generar</button>
+        </div>
+  
+        <div *ngIf="imagenBase64" class="mt-4">
+          <h5>Resultado:</h5>
+          <img [src]="imagenBase64" alt="Código QR" class="img-thumbnail" />
+        </div>
+      </div>
+    </div>
+  </div>
+  

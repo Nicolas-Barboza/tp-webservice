@@ -1,0 +1,66 @@
+<div class="container mt-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">
+      <i class="bi bi-facebook text-primary fs-1 me-2"></i> FACEBOOK - POST
+    </h2>
+  </div>
+
+  <div class="row justify-content-center">
+    <!-- Formulario -->
+    <div class="col-md-5">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="postTitle" class="form-label fw-semibold">Título del Post</label>
+            <input type="text" class="form-control" id="postTitle" [(ngModel)]="postTitle"
+              placeholder="Ej: Para de colectivos para el día de hoy.">
+          </div>
+
+          <div class="mb-3">
+            <label for="postContent" class="form-label fw-semibold">Contenido del Post:</label>
+            <textarea class="form-control" id="postContent" [(ngModel)]="postContent" rows="4"
+              placeholder="Ej: La UTA confirmó el paro de colectivos para hoy Jueves..."></textarea>
+          </div>
+
+          <div class="d-grid">
+            <button type="button" class="btn btn-primary btn-lg" (click)="generateImage()" [disabled]="isLoading">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
+                aria-hidden="true"></span>
+              <span *ngIf="isLoading">Generando Imagen...</span>
+              <span *ngIf="!isLoading"><i class="bi bi-stars me-2"></i>Generar Imagen Asociada</span>
+            </button>
+          </div>
+
+          <div *ngIf="error" class="alert alert-danger mt-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Imagen generada -->
+    <div class="col-md-5">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <h5 class="card-title text-dark fw-bold">Imagen Generada</h5>
+
+          <div *ngIf="isLoading" class="my-4">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2">Generando imagen. Esto puede tardar un momento...</p>
+          </div>
+
+          <div *ngIf="generatedImageUrl && !isLoading && !error">
+            <img [src]="generatedImageUrl" alt="Imagen generada" class="img-fluid rounded shadow-sm mb-3"
+              style="max-height: 300px; border: 1px solid #ccc;">
+          </div>
+
+          <div *ngIf="!generatedImageUrl && !isLoading && !error" class="text-muted">
+            <p>Aquí aparecerá la imagen generada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

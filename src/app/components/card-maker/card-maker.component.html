@@ -1,0 +1,70 @@
+<div class="container mt-4">
+    <h2 class="mb-4 text-center fw-bold display-5">Nuestras Marcas</h2> <div *ngIf="isLoadingMakes" class="text-center py-5">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Cargando marcas...</span>
+    </div>
+    <p class="mt-2">Cargando marcas...</p>
+  </div>
+
+  <div *ngIf="errorMakes && !isLoadingMakes" class="alert alert-danger shadow-sm" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorMakes }}
+  </div>
+
+  <div *ngIf="!isLoadingMakes && !errorMakes && makes.length === 0" class="alert alert-info shadow-sm" role="alert">
+    <i class="bi bi-info-circle-fill me-2"></i> No se encontraron marcas para mostrar.
+  </div>
+
+  <div *ngIf="!isLoadingMakes && !errorMakes && makes.length > 0" class="list-group list-group-flush shadow-sm car-makes-list">
+    <button
+      type="button"
+      class="list-group-item list-group-item-action text-center py-3 car-make-item"
+      *ngFor="let make of makes"
+      (click)="onMakeSelected(make)"
+      [class.active]="make.id === selectedMake?.id"
+    >
+      {{ make.name }}
+    </button>
+  </div>
+
+  <div *ngIf="isLoadingModels" class="text-center mt-3 py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando modelos...</span>
+    </div>
+    <p class="mt-2">Cargando modelos para {{ selectedMake?.name }}...</p>
+  </div>
+
+  <div *ngIf="errorModels && !isLoadingModels" class="alert alert-danger mt-3 shadow-sm" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorModels }}
+  </div>
+</div>
+
+<ng-template #modelsModalContent let-modal>
+    <div class="modal-header bg-primary text-white">
+      <h4 class="modal-title" id="modal-basic-title">
+        <i class="bi bi-car-front-fill me-2"></i>
+        Modelos de: {{ selectedMake?.name }}
+      </h4>
+      <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="isLoadingModels" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando modelos...</span>
+        </div>
+        <p class="mt-2">Cargando modelos...</p>
+      </div>
+      <div *ngIf="!isLoadingModels && models.length > 0; else noModelsInfo">
+        <ul class="list-group list-group-flush">
+          <li *ngFor="let model of models" class="list-group-item">
+            {{ model.name }}
+          </li>
+        </ul>
+      </div>
+      <ng-template #noModelsInfo>
+        <p *ngIf="!isLoadingModels" class="text-muted">No se encontraron modelos para {{ selectedMake?.name }} (Año 2020).</p>
+      </ng-template>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Close click')">Cerrar</button>
+    </div>
+  </ng-template>

@@ -1,0 +1,86 @@
+<div class="container mt-4">
+    <h2 class="mb-4 text-center fw-bold display-5">Conversor de Divisas</h2>
+  
+    <div *ngIf="isLoadingCurrencies" class="text-center py-5">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Cargando monedas...</span>
+      </div>
+      <p class="mt-2">Cargando lista de monedas...</p>
+    </div>
+  
+    <div *ngIf="errorLoadingCurrencies && !isLoadingCurrencies" class="alert alert-danger shadow-sm" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorLoadingCurrencies }}
+    </div>
+  
+    <div *ngIf="!isLoadingCurrencies && !errorLoadingCurrencies && currencies.length > 0" class="card shadow-sm">
+      <div class="card-body p-4">
+        <form (ngSubmit)="convert()">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label for="amount" class="form-label">Cantidad:</label>
+              <input type="number" class="form-control form-control-lg" id="amount" name="amount"
+                     [(ngModel)]="amount"
+                     min="0.01" step="0.01" required
+                     placeholder="0.00">
+            </div>
+  
+            <div class="col-md-4">
+              <label for="fromCurrency" class="form-label">De:</label>
+              <select class="form-select form-select-lg" id="fromCurrency" name="fromCurrency"
+                      [(ngModel)]="fromCurrency" required>
+                <option *ngFor="let currency of currencies" [value]="currency.code">
+                  {{ currency.name }} ({{ currency.code }})
+                </option>
+              </select>
+            </div>
+  
+            <div class="col-md-1 text-center">
+              <button type="button" class="btn btn-secondary btn-lg" (click)="swapCurrencies()" title="Intercambiar monedas">
+                <i class="bi bi-arrow-left-right"></i>
+              </button>
+            </div>
+  
+            <div class="col-md-4">
+              <label for="toCurrency" class="form-label">A:</label>
+              <select class="form-select form-select-lg" id="toCurrency" name="toCurrency"
+                      [(ngModel)]="toCurrency" required>
+                <option *ngFor="let currency of currencies" [value]="currency.code">
+                  {{ currency.name }} ({{ currency.code }})
+                </option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg" [disabled]="isLoadingConversion">
+              <span *ngIf="isLoadingConversion" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              <span *ngIf="isLoadingConversion">Convirtiendo...</span>
+              <span *ngIf="!isLoadingConversion"><i class="bi bi-calculator-fill me-2"></i>Convertir</span>
+            </button>
+          </div>
+        </form>
+  
+        <div *ngIf="isLoadingConversion" class="text-center mt-4">
+          <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Calculando...</span>
+          </div>
+          <p class="mt-2">Calculando conversión...</p>
+        </div>
+        
+        <div *ngIf="errorInConversion && !isLoadingConversion" class="alert alert-warning mt-4" role="alert">
+           <i class="bi bi-exclamation-circle-fill me-2"></i> {{ errorInConversion }}
+        </div>
+  
+        <div *ngIf="convertedAmount !== null && !isLoadingConversion && !errorInConversion" class="mt-4 p-3 bg-light border rounded shadow-sm">
+          <h4 class="text-success text-center mb-3">Resultado de la Conversión</h4>
+          <p class="lead text-center" style="font-size: 1.8rem;">
+            <strong>{{ lastConversionQuery?.amount }} {{ lastConversionQuery?.from }}</strong> = 
+            <strong>{{ convertedAmount | number:'1.2-4' }} {{ lastConversionQuery?.to }}</strong>
+          </p>
+          <p *ngIf="conversionRate" class="text-muted text-center">
+            Tasa de cambio: 1 {{ lastConversionQuery?.from }} = {{ conversionRate | number:'1.4-6' }} {{ lastConversionQuery?.to }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
