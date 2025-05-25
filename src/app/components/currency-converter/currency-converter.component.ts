@@ -39,8 +39,8 @@ export class CurrencyConverterComponent implements OnInit {
     this.errorLoadingCurrencies = null;
     this.currencyService.getSupportedCurrencies().subscribe({
       next: (data) => {
-        this.currencies = data.sort((a, b) => a.name.localeCompare(b.name)); // Ordenar alfabéticamente
-        // Podrías querer preseleccionar monedas comunes si están en la lista
+        console.log('Currencies loaded:', data);
+        this.currencies = data.sort((a, b) => a.name.localeCompare(b.name));
         if (!this.currencies.find(c => c.code === this.fromCurrency) && this.currencies.length > 0) {
           this.fromCurrency = this.currencies[0].code;
         }
@@ -52,8 +52,8 @@ export class CurrencyConverterComponent implements OnInit {
         this.isLoadingCurrencies = false;
       },
       error: (err) => {
-        console.error('Error fetching supported currencies:', err);
-        this.errorLoadingCurrencies = 'Error al cargar la lista de monedas.';
+        console.error('Error loading currencies:', err);
+        this.errorLoadingCurrencies = err.message || 'Error al cargar la lista de monedas.';
         this.isLoadingCurrencies = false;
       }
     });
@@ -73,8 +73,15 @@ export class CurrencyConverterComponent implements OnInit {
     this.convertedAmount = null;
     this.conversionRate = null;
 
+    console.log('Starting conversion:', {
+      from: this.fromCurrency,
+      to: this.toCurrency,
+      amount: this.amount
+    });
+
     this.currencyService.convertCurrency(this.fromCurrency, this.toCurrency, this.amount).subscribe({
       next: (response: ConvertResponse | null) => {
+        console.log('Conversion response:', response);
         if (response && response.success) {
           this.convertedAmount = response.result;
           this.conversionRate = response.info?.quote || null;
@@ -86,8 +93,8 @@ export class CurrencyConverterComponent implements OnInit {
         this.isLoadingConversion = false;
       },
       error: (err) => {
-        console.error('Error during currency conversion:', err);
-        this.errorInConversion = 'Ocurrió un error al realizar la conversión.';
+        console.error('Error during conversion:', err);
+        this.errorInConversion = err.message || 'Ocurrió un error al realizar la conversión.';
         this.isLoadingConversion = false;
       }
     });
